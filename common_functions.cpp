@@ -45,7 +45,7 @@ void trace(){
 
 }
 
-int processes_count(std::vector<Process> processes){
+int processes_count(std::vector<Process>& processes){
     return processes.size();
 
 }
@@ -120,7 +120,7 @@ void stats(int algo_index, std::vector<Process> processes){
     
     print_process(processes);
     print_arrival(processes);
-    print_finish(processes);
+    // print_finish(processes);
     print_turnaround(processes);
     print_normturn(processes);
 

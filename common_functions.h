@@ -24,6 +24,7 @@ void sort_by_service(std::vector<Process>& processes);
 void stats(int algo_index, std::vector<Process>& processes);
 void trace();
 void shortest_time_remaining();
+int processes_count(std::vector<Process>& processes);
 
 // void print_arrival(std::vector<Process>& processes);
 // void print_process(std::vector<Process>& processes);
