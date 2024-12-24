@@ -150,7 +150,7 @@ int main() {
 
     for (auto& scheduler : schedulers) {
         if (visualizationType == "trace") {
-            // Call the trace method if needed
+           
             // scheduler->trace(processes, lastInstant);
         } else if (visualizationType == "stats") {
             scheduler->schedule(processes);

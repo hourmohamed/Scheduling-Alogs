@@ -1,7 +1,7 @@
 #include "Scheduler.h"
-#include <stdexcept>  // Include for invalid_argument
+#include <stdexcept>  
 
-// Default implementation for calculate_turnaround (can be overridden)
+
 
 
 const std::string algos[8] = {"FCFS", "RR", "SPN", "SRT", "HRRN", "FB-1", "FB-2i", "AGING"};
@@ -14,7 +14,6 @@ int Scheduler::calculate_turnaround(std::vector<Process>& processes) {
     return totalTurnaround;
 }
 
-// Definition of calculate_normturn method (note no 'Scheduler::' inside header)
 std::vector<double> Scheduler::calculate_normturn(const std::vector<Process>& processes) {
     std::vector<double> normturns;
 
@@ -42,12 +41,7 @@ std::vector<int> Scheduler::calculate_turnaround_times(const std::vector<Process
 }
 
 void Scheduler::printTrace(const std::vector<Process>& processes) {
-    std::cout << "Tracing processes...\n";
-    for (const auto& process : processes) {
-        std::cout << "Process " << process.name << ": "
-                  << "Arrival Time=" << process.arrivalTime
-                  << ", Finish Time=" << process.finishTime << "\n";
-    }
+
 }
 
 int Scheduler::processes_count(std::vector<Process>& processes) {
