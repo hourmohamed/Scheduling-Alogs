@@ -53,6 +53,7 @@ void parseInput(std::vector<Scheduler*>& schedulers, std::vector<Process>& proce
                 break;
             case 2:
                 if (quantum != -1) {
+                    localSchedulers.push_back(new FCFS()); 
                     selected_algo = "RR";
                 }
                 break;
