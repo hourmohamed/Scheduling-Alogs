@@ -15,16 +15,23 @@ void sort_by_arrival(std::vector<Process>& processes) {
 
 }
 
-int FCFS::calculate_finish_time(Process p){
-    std::cerr <<"arrival time" << p.arrivalTime << std::endl;
-    std::cerr << "service time" << p.serviceTime << std::endl;
-    std::cerr << "finish time" << p.arrivalTime + p.serviceTime << std::endl;
+std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
+    int current_time = 0; 
+    std::vector<int> finish_times;
+    
+    for (int i = 0; i < processes.size(); ++i) {
+        Process& p = processes[i];
+        
+        if (p.arrivalTime > current_time) {
+            current_time = p.arrivalTime;
+        }
+        p.finishTime = current_time + p.serviceTime;
+        current_time = p.finishTime;
+        finish_times.push_back(p.finishTime);
+    }
 
-    std::cerr << "finish time in fcfs" << p.arrivalTime + p.serviceTime << std::endl;
-
-    return p.arrivalTime + p.serviceTime;
+    return finish_times; 
 }
-
 
 void FCFS::schedule(std::vector<Process>& processes) {
 
@@ -33,7 +40,8 @@ void FCFS::schedule(std::vector<Process>& processes) {
     // sort_by_arrival(processes);
 
     int time = processes[0].arrivalTime;
-    
+
+    std::vector<int> finish_times =calculate_finish_times(processes);
     std::vector<int> turnaround_times =calculate_turnaround(processes);
     std::vector<double> normTurn_times = calculate_normturn(processes);
 
@@ -44,7 +52,7 @@ void FCFS::schedule(std::vector<Process>& processes) {
         int serviceTime = processes[i].serviceTime;
 
         // processes[i].finishTime = (time + serviceTime);
-         processes[i].finishTime = calculate_finish_time(processes[i]);
+         processes[i].finishTime = finish_times[i];
 
         // processes[i].turnAroundTime = (processes[i].finishTime - arrivalTime);
         processes[i].turnAroundTime = turnaround_times[i];

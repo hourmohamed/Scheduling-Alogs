@@ -10,10 +10,10 @@ const std::string algos[8] = {"FCFS", "RR", "SPN", "SRT", "HRRN", "FB-1", "FB-2i
 std::vector<double> Scheduler::calculate_normturn(std::vector<Process>& processes) {
     std::vector<double> normturns;
 
-    std::cerr << "in calc norm turn" << std::endl;
+    // std::cerr << "in calc norm turn" << std::endl;
 
     std::vector<int> turnaround_times = calculate_turnaround(processes);
-    std::cerr << "after calc turnaround" << std::endl;
+    // std::cerr << "after calc turnaround" << std::endl;
   
     for (size_t i = 0; i < processes.size(); ++i) {
         const auto& process = processes[i];
@@ -34,25 +34,29 @@ std::vector<double> Scheduler::calculate_normturn(std::vector<Process>& processe
 
 std::vector<int> Scheduler::calculate_turnaround(std::vector<Process>& processes) {
     std::vector<int> turnaround_times;
+    std::vector<int> finish_times;
 
-    std::cerr << "in calc turn around" << std::endl;
+
+    finish_times = calculate_finish_times(processes);
+
+    // std::cerr << "in calc turn around" << std::endl;
 
     if (processes.empty()) {
         std::cerr << "Error: No processes to calculate turnaround times." << std::endl;
         return turnaround_times;
     }
-    for (auto& process : processes) {
-        std::cerr << "bef calc finish timer" << std::endl;
-        process.finishTime =calculate_finish_time(process);
-        std::cerr << "after calc finish timer" << std::endl;
-        std::cerr << process.finishTime << std::endl;
+    for (int i =0 ; i< processes.size(); i++) {
+        // std::cerr << "bef calc finish timer" << std::endl;
+        processes[i].finishTime = finish_times[i];
+        // std::cerr << "after calc finish timer" << std::endl;
+        // std::cerr << processes[i].finishTime << std::endl;
     
-        if (process.finishTime < process.arrivalTime) {
+        if (processes[i].finishTime < processes[i].arrivalTime) {
             // std::cerr << "finish time cannot be earlier than arrival time for process." << " " << process.name << std::endl;
             continue; 
         }
 
-        int turnaround_time = process.finishTime - process.arrivalTime;
+        int turnaround_time = processes[i].finishTime - processes[i].arrivalTime;
         turnaround_times.push_back(turnaround_time);
     }
 
@@ -93,7 +97,7 @@ void Scheduler::print_service(std::vector<Process>& processes) {
 }
 
 void Scheduler::printNormTurn(std::vector<Process>& processes) {
-    std::cerr << "in print norm turn" << std::endl;
+    // std::cerr << "in print norm turn" << std::endl;
     std::cout << "NormTurn   |";
 
     std::vector<double> normTurn;

@@ -22,7 +22,8 @@ public:
     
 
     virtual void schedule(std::vector<Process>& processes) = 0;
-    virtual int calculate_finish_time(Process p) = 0;
+    // virtual int calculate_finish_time(Process p) = 0;
+    virtual std::vector<int>calculate_finish_times(std::vector<Process>& processes);
  
 
     
