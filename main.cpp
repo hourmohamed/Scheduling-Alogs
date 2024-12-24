@@ -14,7 +14,7 @@
 #include <sstream>
 #include <string>
 #include "Scheduler.h"
-
+using namespace std;
 void parseInput(std::vector<Scheduler*>& schedulers, std::vector<Process>& processes, std::string& visualizationType, int& lastInstant, std::string& selected_algo) {
     std::string line;
     std::vector<Scheduler*> localSchedulers;
@@ -150,6 +150,7 @@ int main() {
 
     for (auto& scheduler : schedulers) {
         if (visualizationType == "trace") {
+            cout <<"here";
            
             // scheduler->trace(processes, lastInstant);
         } else if (visualizationType == "stats") {

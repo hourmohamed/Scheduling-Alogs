@@ -15,7 +15,7 @@ void sort_by_arrival(std::vector<Process>& processes) {
 
 }
 
-int FCFS::calculate_finish_time(Process p) {
+int FCFS::calculate_finish_time(Process p){
     std::cerr <<"arrival time" << p.arrivalTime << std::endl;
     std::cerr << "service time" << p.serviceTime << std::endl;
     std::cerr << "finish time" << p.arrivalTime + p.serviceTime << std::endl;
