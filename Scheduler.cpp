@@ -6,24 +6,24 @@
 
 const std::string algos[8] = {"FCFS", "RR", "SPN", "SRT", "HRRN", "FB-1", "FB-2i", "AGING"};
 
-int Scheduler::calculate_turnaround(std::vector<Process>& processes) {
-    int totalTurnaround = 0;
-    for (const auto& process : processes) {
-        totalTurnaround += process.finishTime - process.arrivalTime;
-    }
-    return totalTurnaround;
-}
 
-std::vector<double> Scheduler::calculate_normturn(const std::vector<Process>& processes) {
+std::vector<double> Scheduler::calculate_normturn(std::vector<Process>& processes) {
     std::vector<double> normturns;
 
-    for (const auto& process : processes) {
-        int turnaround_time = process.finishTime - process.arrivalTime;
+    std::cerr << "in calc norm turn" << std::endl;
 
+    std::vector<int> turnaround_times = calculate_turnaround(processes);
+    std::cerr << "after calc turnaround" << std::endl;
+  
+    for (size_t i = 0; i < processes.size(); ++i) {
+        const auto& process = processes[i];
+      
         if (process.serviceTime <= 0) {
             throw std::invalid_argument("Service time must be greater than 0");
         }
-
+     
+        int turnaround_time = turnaround_times[i];
+        
         double normturn = static_cast<double>(turnaround_time) / process.serviceTime;
         normturns.push_back(normturn);
     }
@@ -31,18 +31,35 @@ std::vector<double> Scheduler::calculate_normturn(const std::vector<Process>& pr
     return normturns;
 }
 
-std::vector<int> Scheduler::calculate_turnaround_times(const std::vector<Process>& processes) {
+
+std::vector<int> Scheduler::calculate_turnaround(std::vector<Process>& processes) {
     std::vector<int> turnaround_times;
-    for (const auto& process : processes) {
+
+    std::cerr << "in calc turn around" << std::endl;
+
+    if (processes.empty()) {
+        std::cerr << "Error: No processes to calculate turnaround times." << std::endl;
+        return turnaround_times;
+    }
+    for (auto& process : processes) {
+        std::cerr << "bef calc finish timer" << std::endl;
+        process.finishTime =calculate_finish_time(process);
+        std::cerr << "after calc finish timer" << std::endl;
+        std::cerr << process.finishTime << std::endl;
+    
+        if (process.finishTime < process.arrivalTime) {
+            // std::cerr << "finish time cannot be earlier than arrival time for process." << " " << process.name << std::endl;
+            continue; 
+        }
+
         int turnaround_time = process.finishTime - process.arrivalTime;
         turnaround_times.push_back(turnaround_time);
     }
+
     return turnaround_times;
 }
 
-void Scheduler::printTrace(const std::vector<Process>& processes) {
 
-}
 
 int Scheduler::processes_count(std::vector<Process>& processes) {
     return processes.size();
@@ -76,17 +93,25 @@ void Scheduler::print_service(std::vector<Process>& processes) {
 }
 
 void Scheduler::printNormTurn(std::vector<Process>& processes) {
+    std::cerr << "in print norm turn" << std::endl;
     std::cout << "NormTurn   |";
 
     std::vector<double> normTurn;
+
+    normTurn = calculate_normturn(processes);
     double sum = 0;
 
-    for (const auto& process : processes) {
-        int turnaroundTime = process.finishTime - process.arrivalTime;
-        double normTurnValue = static_cast<double>(turnaroundTime) / process.serviceTime;
-        normTurn.push_back(normTurnValue);
-        sum += normTurnValue;
+    for(int i = 0; i< normTurn.size(); i++)
+    {
+        sum += normTurn[i];
     }
+
+    // for (const auto& process : processes) {
+    //     int turnaroundTime = process.finishTime - process.arrivalTime;
+    //     double normTurnValue = static_cast<double>(turnaroundTime) / process.serviceTime;
+    //     normTurn.push_back(normTurnValue);
+    //     sum += normTurnValue;
+    // }
 
     for (double normTurnValue : normTurn) {
         if (normTurnValue >= 10.0)
@@ -102,7 +127,7 @@ void Scheduler::printNormTurn(std::vector<Process>& processes) {
         printf(" %2.2f|\n", averageNormTurn);
 }
 
-void Scheduler::print_turnaround(const std::vector<Process>& processes, const std::vector<int>& turnaround_times) {
+void Scheduler::print_turnaround(std::vector<Process>& processes, std::vector<int>& turnaround_times) {
     double total_turnaround = 0.0;
     int num_processes = processes.size();
 
@@ -138,11 +163,16 @@ void Scheduler::stats(int algo_index, std::vector<Process> processes) {
     
     
 
-    std::vector<int> turnaround_times = calculate_turnaround_times(processes);
+    std::vector<int> turnaround_times = calculate_turnaround(processes);
     print_turnaround(processes, turnaround_times);
 
     printNormTurn(processes);
 
+}
+
+
+void Scheduler::printTrace(const std::vector<Process>& processes) {
+   
 }
 
 

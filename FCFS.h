@@ -5,9 +5,11 @@
 
 class FCFS : public Scheduler {
 public:
-    void schedule(std::vector<Process>& processes) override;
-    int calculate_finish_time(Process p) override;
+
     void sort_by_arrival(std::vector<Process>& processes);
+    void schedule(std::vector<Process>& processes) override;
+    int calculate_finish_time(Process p) override ;
+   
 
 };
 
