@@ -1,5 +1,6 @@
 #include "Scheduler.h"
 #include <stdexcept>  
+#include<algorithm>
 
 using namespace std;
 
@@ -185,6 +186,18 @@ void Scheduler::stats(int algo_index, std::vector<Process> processes) {
 
 void Scheduler::printTrace(const std::vector<Process>& processes) {
    
+}
+
+
+
+
+
+
+
+void Scheduler::sort_by_arrival(std::vector<Process>& processes) {
+    std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
+        return a.arrivalTime < b.arrivalTime;
+    });
 }
 
 

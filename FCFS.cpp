@@ -3,11 +3,11 @@
 #include <algorithm>
 
 // Sort the processes by arrival time in ascending order
-void FCFS::sort_by_arrival(std::vector<Process>& processes) {
-    std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
-        return a.arrivalTime < b.arrivalTime;
-    });
-}
+// void FCFS::sort_by_arrival(std::vector<Process>& processes) {
+//     std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
+//         return a.arrivalTime < b.arrivalTime;
+//     });
+// }
 
 // Calculate finish times for each process in FCFS
 std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
