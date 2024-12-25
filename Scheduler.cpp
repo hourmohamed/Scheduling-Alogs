@@ -1,7 +1,7 @@
 #include "Scheduler.h"
 #include <stdexcept>  
 
-
+using namespace std;
 
 
 const std::string algos[8] = {"FCFS", "RR", "SPN", "SRT", "HRRN", "FB-1", "FB-2i", "AGING"};
@@ -139,11 +139,17 @@ void Scheduler::print_turnaround(std::vector<Process>& processes, std::vector<in
 
     for (int i = 0; i < num_processes; ++i) {
         total_turnaround += turnaround_times[i];
+        
         printf("|%3d  ", turnaround_times[i]);
+    
+       
     }
 
     double mean_turnaround = total_turnaround / num_processes;
-    std::cout << "| " << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
+    if (mean_turnaround<=10)
+        std::cout << "| " << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
+    else 
+        std::cout << "|" << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
 }
 
 void Scheduler::printFinishTime(std::vector<Process>& processes) {
@@ -158,8 +164,10 @@ void Scheduler::printFinishTime(std::vector<Process>& processes) {
 void Scheduler::stats(int algo_index, std::vector<Process> processes) {
 
 
-    std::cout << algos[algo_index] << std::endl;
-
+    std::cout << algos[algo_index] ;
+    if (this->quantum!=0)
+        cout <<"-"<<this->quantum;
+    cout <<endl;
     print_process(processes);
     print_arrival(processes);
     print_service(processes);
