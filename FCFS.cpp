@@ -30,7 +30,25 @@ std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
 void FCFS::schedule(std::vector<Process>& processes) {
     std::cerr << "Scheduling using FCFS" << std::endl;
 
-    sort_by_arrival(processes);  // Sort the processes by arrival time
+    std::cerr << "Scheduling using RoundRobin" << std::endl;
+std::cerr << "before sorting" << std::endl;
+
+if (processes.empty()) {
+    std::cerr << "Error: No processes to schedule!" << std::endl;
+    return;
+}
+
+// Print process details for debugging
+for (const auto& process : processes) {
+    std::cerr << "Process " << process.name << ": Arrival Time = " 
+              << process.arrivalTime << ", Service Time = " 
+              << process.serviceTime << std::endl;
+}
+
+sort_by_arrival(processes);
+
+std::cerr << "after sorting" << std::endl;
+ // Sort the processes by arrival time
 
     std::vector<int> finish_times = calculate_finish_times(processes);  // Get finish times
     std::vector<int> turnaround_times = calculate_turnaround(processes);  // Get turnaround times

@@ -15,7 +15,7 @@ public:
     virtual ~Scheduler() {}
     const std::string TRACE = "trace";
     const std::string STATS = "stats";
-
+    int quantum=0;
     virtual void schedule(std::vector<Process>& processes) = 0;
     virtual std::vector<int> calculate_finish_times(std::vector<Process>& processes) = 0;  // Pure virtual
 

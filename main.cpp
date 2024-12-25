@@ -7,7 +7,7 @@
 #include "Process.h"
 #include "Scheduler.h"
 #include "FCFS.h"
-
+#include "RoundRobin.h"
 
 #include <iostream>
 #include <vector>
@@ -53,7 +53,11 @@ void parseInput(std::vector<Scheduler*>& schedulers, std::vector<Process>& proce
                 break;
             case 2:
                 if (quantum != -1) {
-                    localSchedulers.push_back(new FCFS()); 
+
+                    //cout <<quantum;
+                   // Scheduler rr=new RoundRobin();
+                    localSchedulers.push_back(new RoundRobin()); 
+                    localSchedulers[0]->quantum=quantum;
                     selected_algo = "RR";
                 }
                 break;
@@ -150,11 +154,13 @@ int main() {
     int algo_index = get_index(selected_algo); 
 
     for (auto& scheduler : schedulers) {
+       // cout <<scheduler->quantum;
         if (visualizationType == "trace") {
-            cout <<"here";
+           // cout <<"here";
            
-            // scheduler->trace(processes, lastInstant);
+            scheduler->printTrace(processes);
         } else if (visualizationType == "stats") {
+           // cout <<processes[0].name;
             scheduler->schedule(processes);
             scheduler->stats(algo_index, processes); 
         
