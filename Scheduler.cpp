@@ -201,3 +201,8 @@ void Scheduler::sort_by_arrival(std::vector<Process>& processes) {
 }
 
 
+void Scheduler::sort_by_service(std::vector<Process>& processes) {
+    std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
+        return a.serviceTime < b.serviceTime;
+    });
+}

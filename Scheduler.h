@@ -23,6 +23,7 @@ public:
     std::vector<int> calculate_turnaround(std::vector<Process>& processes);
 
     void sort_by_arrival(std::vector<Process>& processes);
+    void sort_by_service(std::vector<Process>& processes);
 
     int processes_count(std::vector<Process>& processes);
     void printTrace(const std::vector<Process>& processes);
