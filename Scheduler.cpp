@@ -206,17 +206,17 @@ void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
     for (int i = 0; i < processes.size(); i++)
     {
         cout <<processes[i].name <<"    ";
-        // for (int j=0;j<this->time_line;j++)
-        //     {
-        //         cout <<"|";
-        //         if (processes[i].state[j]==1)
-        //             cout <<"*";
-        //         else if (processes[i].state[j]==0)
-        //             cout <<".";
-        //         else 
-        //             cout <<" ";
-        //     }
-        // cout <<"|"<<endl;
+        for (int j=0;j<this->time_line;j++)
+            {
+                cout <<"|";
+                if (processes[i].state.at(j)==1)
+                    cout <<"*";
+                else if (processes[i].state.at(j)==0)
+                    cout <<".";
+                else 
+                    cout <<" ";
+            }
+        cout <<"|"<<endl;
     }
 }
 

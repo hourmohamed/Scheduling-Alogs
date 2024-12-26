@@ -1,13 +1,16 @@
 #include "Process.h"
+#include <iostream>
+using namespace std;
 
-Process::Process(char name, int arrivalTime, int serviceTime,int time_line) {
+Process::Process(char name, int arrivalTime, int serviceTime, int time_line) {
     this->name = name;
     this->arrivalTime = arrivalTime;
     this->serviceTime = serviceTime;
-    this->remainingTime = serviceTime;  // Initialize remaining time to service time
+    this->remainingTime = serviceTime;
     this->finishTime = 0;
     this->turnAroundTime = 0;
     this->normTurn = 0;
-    for (int i=0;i<time_line;i++)
-        state[i]=-1;
+    state.resize(time_line, -1);
 }
+
+
