@@ -100,12 +100,12 @@ void parseInput(std::vector<Scheduler*>& schedulers, std::vector<Process>& proce
   
     std::getline(std::cin, line);
     lastInstant = std::stoi(line);
-    // std::cerr <<"last instant: " << lastInstant << std::endl; 
+    std::cerr <<"last instant: " << lastInstant << std::endl; 
 
     
     std::getline(std::cin, line);
     int numProcesses = std::stoi(line);
-
+    schedulers[0]->time_line=lastInstant;
   
     processes.clear();
     for (int i = 0; i < numProcesses; ++i) {
@@ -125,7 +125,7 @@ void parseInput(std::vector<Scheduler*>& schedulers, std::vector<Process>& proce
         // std::cerr <<"arrival time: " << arrivalTime << std::endl;
         // std::cerr <<"service time: " << serviceTime << std::endl;
 
-        processes.push_back(Process(name, arrivalTime, serviceTime));
+        processes.push_back(Process(name, arrivalTime, serviceTime,lastInstant));
     }
 }
 
@@ -157,8 +157,8 @@ int main() {
        // cout <<scheduler->quantum;
         if (visualizationType == "trace") {
            // cout <<"here";
-           
-            scheduler->printTrace(processes);
+            scheduler->schedule(processes);
+            scheduler->printTrace(algo_index,processes);
         } else if (visualizationType == "stats") {
            // cout <<processes[0].name;
             scheduler->schedule(processes);

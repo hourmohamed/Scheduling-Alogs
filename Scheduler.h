@@ -16,6 +16,7 @@ public:
     const std::string TRACE = "trace";
     const std::string STATS = "stats";
     int quantum=0;
+    int time_line=0;
     virtual void schedule(std::vector<Process>& processes) = 0;
     virtual std::vector<int> calculate_finish_times(std::vector<Process>& processes) = 0;  // Pure virtual
 
@@ -26,7 +27,7 @@ public:
     void sort_by_service(std::vector<Process>& processes);
 
     int processes_count(std::vector<Process>& processes);
-    void printTrace(const std::vector<Process>& processes);
+    void printTrace(int algo_index,const std::vector<Process>& processes);
     void print_process(std::vector<Process>& processes);
     void print_arrival(std::vector<Process>& processes);
     void print_service(std::vector<Process>& processes);
