@@ -35,10 +35,12 @@ std::vector<double> Scheduler::calculate_normturn(std::vector<Process> &processe
 
 std::vector<int> Scheduler::calculate_turnaround(std::vector<Process> &processes)
 {
+    // std::cerr << "in calc turn around" << std::endl;
     std::vector<int> turnaround_times;
     std::vector<int> finish_times;
 
     finish_times = calculate_finish_times(processes);
+    
 
     // std::cerr << "in calc turn around" << std::endl;
 

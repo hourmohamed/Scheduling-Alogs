@@ -8,6 +8,7 @@
 #include "Scheduler.h"
 #include "FCFS.h"
 #include "RoundRobin.h"
+#include "SPN.h"
 
 #include <iostream>
 #include <vector>
@@ -68,6 +69,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
 
         case 3:
             // SPN
+            localSchedulers.push_back(new SPN());
             selected_algo = "SPN";
             break;
         case 4:
@@ -161,9 +163,6 @@ int main()
         // cout <<scheduler->quantum;
         if (visualizationType == "trace")
         {
-           
-            
-
             scheduler->schedule(processes);
             scheduler->printTrace(algo_index, processes);
         }

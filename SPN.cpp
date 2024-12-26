@@ -4,9 +4,15 @@
 #include <queue>
 
 
-// std::vector<int> SPN::calculate_finish_times(std::vector<Process>& processes){
+std::vector<int> SPN::calculate_finish_times(std::vector<Process>& processes){
+        vector <int> finish_times;
+    for (int i=0;i<processes.size();i++)
+    {
+        finish_times.push_back(processes[i].finishTime);
+    }
+    return finish_times;
 
-// }
+}
 
 
 struct CompareServiceTime {
@@ -18,18 +24,7 @@ struct CompareServiceTime {
 
 
 
-std::vector<int> SPN::calculate_finish_times(std::vector<Process>& processes){
 
-
-    std::vector<int> times;
-    for(int i = 0; i< processes.size(); i++){
-        processes[i].finishTime = 0;
-    }
-
-    return times;
-
-   
-}
 
 
 void SPN::schedule(std::vector<Process>& processes) {
@@ -79,20 +74,34 @@ void SPN::schedule(std::vector<Process>& processes) {
                 currentTime = processes[index].arrivalTime;
             }
         }
+ 
 
-    // std::vector<int> finish_times = calculate_finish_times(processes);
+
+
+    
     // std::vector<int> turnaround_times = calculate_turnaround(processes);  
     // std::vector<double> normTurn_times = calculate_normturn(processes); 
-    
 
-
-    for (int i = 0; i < processes.size(); ++i) {
-        // processes[i].finishTime = finish_times[i];
-        // processes[i].turnAroundTime = turnaround_times[i];
-        // processes[i].normTurn = normTurn_times[i];
-
-        std::cerr << processes[i].turnAroundTime <<std::endl;
+    // calc turnaround time
+    for(int i = 0; i<processes.size(); i++)
+    {
+        // std::cerr << "in loop: " << i << std::endl;
+        processes[i].turnAroundTime = processes[i].finishTime-processes[i].arrivalTime;
+        // std::cerr << processes[i].turnAroundTime << std::endl;
+        double normturn = static_cast<double> (processes[i].turnAroundTime)/processes[i].serviceTime;
+        processes[i].normTurn = normturn;
+        // std::cerr << processes[i].normTurn << std::endl;
+        // printf("%2.2f \n", normturn);
     }
+  
+
+
+    // for (int i = 0; i < processes.size(); ++i) {
+    //     // processes[i].turnAroundTime = turnaround_times[i];
+    //     // processes[i].normTurn = normTurn_times[i];
+
+    //     std::cerr << processes[i].turnAroundTime <<std::endl;
+    // }
 
 
 }

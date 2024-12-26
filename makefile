@@ -1,7 +1,7 @@
 all: main
 
-main: main.o Process.o Scheduler.o FCFS.o RoundRobin.o
-	g++ main.o Process.o Scheduler.o FCFS.o RoundRobin.o -o main 
+main: main.o Process.o Scheduler.o FCFS.o RoundRobin.o SPN.o
+	g++ main.o Process.o Scheduler.o FCFS.o RoundRobin.o SPN.o -o main 
 
 main.o: main.cpp
 	g++ -c main.cpp -o main.o
@@ -16,5 +16,8 @@ FCFS.o: FCFS.cpp
 	g++ -c FCFS.cpp -o FCFS.o
 RoundRobin.o: RoundRobin.cpp
 	g++ -c RoundRobin.cpp -o RoundRobin.o
+
+SPN.o: SPN.cpp
+	g++ -c SPN.cpp -o SPN.o
 clean:
 	rm -f *.o main
