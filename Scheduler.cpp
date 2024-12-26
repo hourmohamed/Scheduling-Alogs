@@ -110,12 +110,7 @@ void Scheduler::printNormTurn(std::vector<Process>& processes) {
         sum += normTurn[i];
     }
 
-    // for (const auto& process : processes) {
-    //     int turnaroundTime = process.finishTime - process.arrivalTime;
-    //     double normTurnValue = static_cast<double>(turnaroundTime) / process.serviceTime;
-    //     normTurn.push_back(normTurnValue);
-    //     sum += normTurnValue;
-    // }
+
 
     for (double normTurnValue : normTurn) {
         if (normTurnValue >= 10.0)
