@@ -8,22 +8,16 @@ class SPN : public Scheduler
 {
 
 public:
-    SPN(/* args */);
-    ~SPN();
+    // SPN();
+    // ~SPN();
 
-    void schedule(std::vector<Process>& processes) override;
-    std::vector<int> calculate_finish_times(std::vector<Process> processes);
+    void schedule(std::vector<Process>& processes) override ;
+    std::vector<int> calculate_finish_times(std::vector<Process>& processes) override ;
+    
     
 
 };
 
-SPN::SPN(/* args */)
-{
-}
-
-SPN::~SPN()
-{
-}
 
 
 
