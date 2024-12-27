@@ -9,6 +9,7 @@
 #include "FCFS.h"
 #include "RoundRobin.h"
 #include "SPN.h"
+#include "HRRN.h"
 
 #include <iostream>
 #include <vector>
@@ -78,6 +79,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 5:
             // HRRN
+            localSchedulers.push_back(new HRRN());
             selected_algo = "HRRN";
             break;
         case 6:
