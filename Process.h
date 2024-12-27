@@ -11,6 +11,7 @@ public:
     int turnAroundTime=0;
     int normTurn=0;
     int remainingTime;
+    float waiting_time=0;
     int time_line;
     vector<int> state;
     Process(char name, int arrivalTime, int serviceTime,int time_line);
