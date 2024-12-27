@@ -9,7 +9,7 @@
 #include "FCFS.h"
 #include "RoundRobin.h"
 #include "SPN.h"
-
+#include "SRT.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -74,6 +74,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 4:
             // SRT
+            localSchedulers.push_back(new SRT());
             selected_algo = "SRT";
             break;
         case 5:
@@ -105,13 +106,13 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
 
     std::getline(std::cin, line);
     lastInstant = std::stoi(line);
-    std::cerr << "last instant: " << lastInstant << std::endl;
+   // std::cerr << "last instant: " << lastInstant << std::endl;
 
 std::getline(std::cin, line);
 int numProcesses = std::stoi(line);
 schedulers[0]->time_line = lastInstant;
 
-std::cerr << "Number of processes: " << numProcesses << std::endl;
+//std::cerr << "Number of processes: " << numProcesses << std::endl;
 
 processes.clear();
 for (int i = 0; i < numProcesses; ++i)
