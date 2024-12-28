@@ -89,6 +89,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 7:
             // FB-2i
+            localSchedulers.push_back(new HRRN());
             selected_algo = "FB-2i";
             break;
         case 8:

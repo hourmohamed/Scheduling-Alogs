@@ -21,12 +21,9 @@ std::vector<int> SPN::calculate_finish_times(std::vector<Process>& processes){
 
 struct CompareServiceTime {
     bool operator()(const Process* p1, const Process* p2) const {
-        return p1->serviceTime > p2->serviceTime; // Adjust as needed for your comparison logic
+        return p1->serviceTime > p2->serviceTime; 
     }
 };
-
-
-
 
 
 
@@ -78,27 +75,28 @@ struct CompareServiceTime {
 
 // }
 
-
 void SPN::schedule(std::vector<Process>& processes) {
     if (processes.empty()) {
         std::cerr << "Error: No processes to schedule!" << std::endl;
         return;
     }
 
-    
+   
     std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
         return a.arrivalTime < b.arrivalTime;
     });
 
-    int current_time = 0; 
-    std::vector<bool> completed(processes.size(), false); 
+    int current_time = 0;
+    std::vector<bool> completed(processes.size(), false);
     int completed_count = 0;
 
+  
     while (completed_count < processes.size()) {
         
         int shortest_idx = -1;
         int shortest_time = INT_MAX;
 
+        
         for (int i = 0; i < processes.size(); ++i) {
             if (!completed[i] && processes[i].arrivalTime <= current_time &&
                 processes[i].serviceTime < shortest_time) {
@@ -107,33 +105,32 @@ void SPN::schedule(std::vector<Process>& processes) {
             }
         }
 
+        
         if (shortest_idx == -1) {
-           
             for (auto& p : processes) {
-                if (!completed[&p - &processes[0]]) {
+                if (!completed[&p - &processes[0]] && p.arrivalTime <= current_time) {
                     int wrapped_time = current_time % this->time_line;
-                    p.state[wrapped_time] = 5;
+                    p.state[wrapped_time] = 5; 
                 }
             }
             current_time++;
             continue;
         }
 
+       
         Process& p = processes[shortest_idx];
 
         
-        for (int t = current_time; t < p.arrivalTime; ++t) {
+        for (int t = p.arrivalTime; t < current_time; ++t) {
             int wrapped_time = t % this->time_line;
-            p.state[wrapped_time] = 0;
+            p.state[wrapped_time] = 0; 
         }
 
-        
+     
         current_time = std::max(current_time, p.arrivalTime);
-
-        
         for (int t = current_time; t < current_time + p.serviceTime; ++t) {
             int wrapped_time = t % this->time_line;
-            p.state[wrapped_time] = 1;
+            p.state[wrapped_time] = 1; 
         }
 
        
@@ -141,14 +138,17 @@ void SPN::schedule(std::vector<Process>& processes) {
         completed[shortest_idx] = true;
         completed_count++;
 
-        
+
         current_time = p.finishTime;
     }
 
+    
     for (auto& p : processes) {
         for (int t = current_time; t < this->time_line; ++t) {
             int wrapped_time = t % this->time_line;
-            p.state[wrapped_time] = 5;
+            if (p.state[wrapped_time] != 1) {
+                p.state[wrapped_time] = -1;  
+            }
         }
     }
 }
