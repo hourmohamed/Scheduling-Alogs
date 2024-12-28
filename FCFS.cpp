@@ -60,22 +60,21 @@ void FCFS::schedule(std::vector<Process>& processes) {
         return;
     }
 
-    // Sort the processes by arrival time
+    
     sort_by_arrival(processes);
-
-    // Get finish times, turnaround times, and normalized turnaround times
+ 
     std::vector<int> finish_times = calculate_finish_times(processes);
     std::vector<int> turnaround_times = calculate_turnaround(processes);
     std::vector<double> normTurn_times = calculate_normturn(processes);
 
-    // Update processes with calculated times
+    
     for (int i = 0; i < processes.size(); ++i) {
         processes[i].finishTime = finish_times[i];
         processes[i].turnAroundTime = turnaround_times[i];
         processes[i].normTurn = normTurn_times[i];
     }
 
-    int current_time = 0; // Keeps track of the current time in the timeline
+    int current_time = 0; 
 
     for (auto& p : processes) {
         
