@@ -10,11 +10,12 @@
 #include "RoundRobin.h"
 #include "SPN.h"
 #include "SRT.h"
+#include "HRRN.h"
+
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <string>
-#include "Scheduler.h"
 using namespace std;
 void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &processes, std::string &visualizationType, int &lastInstant, std::string &selected_algo)
 {
@@ -79,6 +80,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 5:
             // HRRN
+            localSchedulers.push_back(new HRRN());
             selected_algo = "HRRN";
             break;
         case 6:
@@ -169,7 +171,7 @@ int main()
         }
         else if (visualizationType == "stats")
         {
-            // cout <<processes[0].name;
+            cout <<processes[4].turnAroundTime << std::endl; 
             scheduler->schedule(processes);
             scheduler->stats(algo_index, processes);
         }
