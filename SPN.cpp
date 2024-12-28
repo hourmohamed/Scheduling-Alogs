@@ -58,6 +58,7 @@ void SPN::schedule(std::vector<Process>& processes) {
               
                 Process* current = pq.top();
                 pq.pop();
+                current->state[currentTime] = 1;
 
                           
                 currentTime += current->serviceTime;

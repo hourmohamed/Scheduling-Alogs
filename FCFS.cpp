@@ -27,28 +27,77 @@ std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
 }
 
 // Main FCFS scheduling function
-void FCFS::schedule(std::vector<Process>& processes) {
+// void FCFS::schedule(std::vector<Process>& processes) {
    
 
-if (processes.empty()) {
-    std::cerr << "Error: No processes to schedule!" << std::endl;
-    return;
-}
+// if (processes.empty()) {
+//     std::cerr << "Error: No processes to schedule!" << std::endl;
+//     return;
+// }
 
 
-sort_by_arrival(processes);
+// sort_by_arrival(processes);
 
 
- // Sort the processes by arrival time
+//  // Sort the processes by arrival time
 
-    std::vector<int> finish_times = calculate_finish_times(processes);  // Get finish times
-    std::vector<int> turnaround_times = calculate_turnaround(processes);  // Get turnaround times
-    std::vector<double> normTurn_times = calculate_normturn(processes);  // Get normalized turnaround times
+//     std::vector<int> finish_times = calculate_finish_times(processes);  // Get finish times
+//     std::vector<int> turnaround_times = calculate_turnaround(processes);  // Get turnaround times
+//     std::vector<double> normTurn_times = calculate_normturn(processes);  // Get normalized turnaround times
+
+//     // Update processes with calculated times
+//     for (int i = 0; i < processes.size(); ++i) {
+//         processes[i].finishTime = finish_times[i];
+//         processes[i].turnAroundTime = turnaround_times[i];
+//         processes[i].normTurn = normTurn_times[i];
+//     }
+// }
+
+
+void FCFS::schedule(std::vector<Process>& processes) {
+    if (processes.empty()) {
+        std::cerr << "Error: No processes to schedule!" << std::endl;
+        return;
+    }
+
+    // Sort the processes by arrival time
+    sort_by_arrival(processes);
+
+    // Get finish times, turnaround times, and normalized turnaround times
+    std::vector<int> finish_times = calculate_finish_times(processes);
+    std::vector<int> turnaround_times = calculate_turnaround(processes);
+    std::vector<double> normTurn_times = calculate_normturn(processes);
 
     // Update processes with calculated times
     for (int i = 0; i < processes.size(); ++i) {
         processes[i].finishTime = finish_times[i];
         processes[i].turnAroundTime = turnaround_times[i];
         processes[i].normTurn = normTurn_times[i];
+    }
+
+    int current_time = 0; // Keeps track of the current time in the timeline
+
+    for (auto& p : processes) {
+        
+        for (int t = current_time; t < p.arrivalTime; ++t) {
+            int wrapped_time = t % this->time_line;
+            p.state[wrapped_time] = 0; 
+        }
+
+       
+        current_time = std::max(current_time, p.arrivalTime);
+
+       
+        for (int t = current_time; t < p.finishTime; ++t) {
+            int wrapped_time = t % this->time_line;
+            p.state[wrapped_time] = 1; 
+        }
+
+        
+        current_time = p.finishTime;
+        for (int t = p.finishTime; t < this->time_line; ++t) {
+            int wrapped_time = t % this->time_line;
+            p.state[wrapped_time] = 5; 
+        }
     }
 }
