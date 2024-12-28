@@ -86,6 +86,10 @@ void RoundRobin::schedule(std::vector<Process> &processes)
         for (int i = current_time - time_slice; i < current_time; ++i)
             current_process->state.at(i) = 1; // Update state for current process
 
+        for (int i=0;i<processes.size();i++)
+            if (&processes[i]!=current_process&&processes[i].remainingTime>0&&processes[i].arrivalTime<=current_time-time_slice)
+                for (int j = current_time - time_slice; j < current_time; ++j)
+                    processes[i].state[j]=0;
         if (current_process->remainingTime == 0)
         {
             current_process->finishTime = current_time;

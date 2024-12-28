@@ -23,15 +23,13 @@ std::vector<int> SRT::calculate_finish_times(std::vector<Process> &processes)
     return finish_times;
 }
 
+
 void SRT::schedule(std::vector<Process> &processes)
 {
-    
     int current_time = 0;
     int number_of_processes = 0;
-    int min_burst = 0;
     Process *min_process = nullptr;
-    std::queue<Process *> ready_queue;
-    std::queue<Process *> temp_queue;
+    std::queue<Process *> ready_queue; // Explicit ready queue
 
     // Sort processes by arrival time
     sort_by_arrival(processes);
@@ -41,62 +39,85 @@ void SRT::schedule(std::vector<Process> &processes)
         // Add processes that have arrived to the ready queue
         while (number_of_processes < processes.size() && processes[number_of_processes].arrivalTime <= current_time)
         {
-            if (current_time < processes[number_of_processes].state.size())
-                processes[number_of_processes].state.at(current_time) = 0;
             ready_queue.push(&processes[number_of_processes]);
+            processes[number_of_processes].state[current_time] = 0; // Mark as ready
+            // cout << "Process " << processes[number_of_processes].name
+            //      << " entered ready queue at time " << current_time << endl;
             number_of_processes++;
         }
 
-        // If the ready queue is empty, advance time
+        // If the ready queue is empty, advance time to the next arrival
         if (ready_queue.empty())
         {
-            cout<<"f";
-            current_time++;
+            if (number_of_processes < processes.size())
+            {
+                current_time = processes[number_of_processes].arrivalTime; // Jump to the next process arrival time
+                //cout << "No process in ready queue. Advancing time to " << current_time << endl;
+            }
             continue;
         }
 
         // Find the process with the shortest remaining time
-        min_burst = INT_MAX;
+        min_process = nullptr;
+        std::queue<Process *> temp_queue;
+
         while (!ready_queue.empty())
         {
             Process *temp_process = ready_queue.front();
             ready_queue.pop();
-            temp_queue.push(temp_process);
 
-            if (temp_process->serviceTime < min_burst)
+            if (temp_process->remainingTime > 0 &&
+                (min_process == nullptr || temp_process->remainingTime < min_process->remainingTime))
             {
-                min_burst = temp_process->serviceTime;
                 min_process = temp_process;
             }
+
+            temp_queue.push(temp_process);
         }
 
-        // Rebuild the ready queue (except the process with the shortest burst time)
+        // Rebuild the ready queue
         while (!temp_queue.empty())
         {
             Process *temp_process = temp_queue.front();
             temp_queue.pop();
-            if (temp_process != min_process)
+
+            // Only re-add processes with remaining time greater than 0
+            if (temp_process!=min_process)
             {
                 ready_queue.push(temp_process);
+                temp_process->state[current_time]=0;
             }
-            
         }
 
         // Execute the selected process
         if (min_process)
         {
+            // cout << "Executing process " << min_process->name
+            //      << " at time " << current_time << endl;
+
             min_process->remainingTime--;
-            current_time++;
-            min_process->state[current_time]=1;
+            min_process->state[current_time] = 1; // Mark as executing
+            current_time++;                       // Advance time
 
             if (min_process->remainingTime == 0)
             {
                 min_process->finishTime = current_time;
+                // cout << "Process " << min_process->name
+                //      << " finished at time " << min_process->finishTime << endl;
             }
-            else
+            else 
             {
                 ready_queue.push(min_process);
+                //min_process->state[current_time] = 0; 
+
             }
         }
+
+        // Debug: Print queue status
+        //cout << "Ready queue size: " << ready_queue.size() << endl;
     }
+
+    //cout << "Scheduling completed!" << endl;
 }
+
+
