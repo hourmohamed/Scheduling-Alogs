@@ -53,7 +53,6 @@ std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
 //     }
 // }
 
-
 void FCFS::schedule(std::vector<Process>& processes) {
     if (processes.empty()) {
         std::cerr << "Error: No processes to schedule!" << std::endl;
@@ -62,28 +61,36 @@ void FCFS::schedule(std::vector<Process>& processes) {
 
     
     sort_by_arrival(processes);
- 
+
+   
     std::vector<int> finish_times = calculate_finish_times(processes);
     std::vector<int> turnaround_times = calculate_turnaround(processes);
     std::vector<double> normTurn_times = calculate_normturn(processes);
 
-    
+  
     for (int i = 0; i < processes.size(); ++i) {
+        // std::cerr << "in loop 1" << std::endl;
         processes[i].finishTime = finish_times[i];
         processes[i].turnAroundTime = turnaround_times[i];
         processes[i].normTurn = normTurn_times[i];
     }
 
-    int current_time = 0; 
+    int current_time = 0;
 
+  
     for (auto& p : processes) {
-        
-        for (int t = current_time; t < p.arrivalTime; ++t) {
+        // std::cerr << "in loop 2" << std::endl;
+         
+        for (int t = p.arrivalTime; t < current_time; ++t) {
+            std::cerr << "in loop 3" << std::endl;
             int wrapped_time = t % this->time_line;
-            p.state[wrapped_time] = 0; 
+            p.state[wrapped_time] = 0;  // Waiting (dot)
+            std::cerr << p.name << std::endl;
+            // std::cerr << wrapped_time << std::endl;
+            // std::cerr << current_time << std::endl;
         }
 
-       
+        
         current_time = std::max(current_time, p.arrivalTime);
 
        
@@ -92,11 +99,13 @@ void FCFS::schedule(std::vector<Process>& processes) {
             p.state[wrapped_time] = 1; 
         }
 
-        
+      
         current_time = p.finishTime;
-        for (int t = p.finishTime; t < this->time_line; ++t) {
+        for (int t = current_time; t < this->time_line; ++t) {
             int wrapped_time = t % this->time_line;
-            p.state[wrapped_time] = 5; 
+            if (p.state[wrapped_time] != 1) {  
+                p.state[wrapped_time] = -1;  
+            }
         }
     }
 }

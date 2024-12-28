@@ -81,7 +81,6 @@ void SPN::schedule(std::vector<Process>& processes) {
         return;
     }
 
-   
     std::sort(processes.begin(), processes.end(), [](const Process& a, const Process& b) {
         return a.arrivalTime < b.arrivalTime;
     });
@@ -98,6 +97,7 @@ void SPN::schedule(std::vector<Process>& processes) {
 
         
         for (int i = 0; i < processes.size(); ++i) {
+            // std::cerr << "inloop" << std::endl;
             if (!completed[i] && processes[i].arrivalTime <= current_time &&
                 processes[i].serviceTime < shortest_time) {
                 shortest_time = processes[i].serviceTime;
