@@ -1,6 +1,9 @@
 #include "FB2i.h"
 #include <queue>
 #include <unordered_map>
+#include <math.h>
+
+
 
 std::vector<int> FB2i::calculate_finish_times(std::vector<Process>& processes){
     vector <int> finish_times;
@@ -26,7 +29,50 @@ void FB2i::schedule(std::vector<Process>& processes, int last_instant){
         j++;
     }
 
-    // for(int time = 0 ; time < i)
+    for(int time = 0 ; time < last_instant ; time++){
+        if(!pq.empty()){
+            int priority_level = pq.top().first;
+            int process_index = pq.top().second;
+
+            pq.pop();
+            while(j < processes.size() && processes[j].arrivalTime < time+1){
+                pq.push(make_pair(0, j));
+                remaining_service_time[j] = processes[j].serviceTime;
+                j++;
+            }
+            int current_quantum = pow(2, priority_level);
+            int temp = time;
+
+            while(current_quantum && remaining_service_time[process_index]){
+                current_quantum --;
+                remaining_service_time[process_index]--;
+                processes[process_index].state[temp++] = 1;
+
+            }
+            if(remaining_service_time[process_index] == 0){
+                processes[process_index].finishTime = temp;
+                processes[process_index].turnAroundTime = processes[process_index].finishTime - processes[process_index].arrivalTime;
+                processes[process_index].normTurn = processes[process_index].turnAroundTime*1.0/processes[process_index].serviceTime;
+
+            }
+            else{
+                if(pq.size()>=1){
+                    pq.push(make_pair(priority_level+1, process_index));
+
+                }else{
+                    pq.push(make_pair(priority_level, process_index));
+                }
+                time = temp-1;
+            }
+            
+
+            while(j<processes.size() && processes[j].arrivalTime <= time+1){
+                pq.push(make_pair(0, j));
+                remaining_service_time[j] = processes[j].serviceTime;
+                j++;
+            }
+        }
+    }
 
 
 
