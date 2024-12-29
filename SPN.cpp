@@ -26,55 +26,6 @@ struct CompareServiceTime {
 };
 
 
-
-
-// void SPN::schedule(std::vector<Process>& processes) {
-
-//     if (processes.empty()) {
-//     std::cerr << "Error: No processes to schedule!" << std::endl;
-//     return;
-// }
-//         sort_by_arrival(processes);
-
-//         std::priority_queue<Process* , std::vector<Process*>, CompareServiceTime> pq;
-//         int currentTime = 0;
-//         int index = 0; 
-
-//         std::vector<Process> completedProcesses;
-//         while (index < processes.size() || !pq.empty()) {
-//             while (index < processes.size() && processes[index].arrivalTime <= currentTime) {
-                
-//                 pq.push(& processes[index]);
-//                 index++;
-//             }
-//             if (!pq.empty()) {
-              
-//                 Process* current = pq.top();
-//                 pq.pop();
-//                 current->state[currentTime] = 1;
-
-                          
-//                 currentTime += current->serviceTime;
-//                 current->finishTime = currentTime;
-               
-//                 completedProcesses.push_back(*current);
-
-//             } else {
-//                 currentTime = processes[index].arrivalTime;
-//             }
-//         }
-
-//     for(int i = 0; i<processes.size(); i++)
-//     {
-//         processes[i].turnAroundTime = processes[i].finishTime-processes[i].arrivalTime; 
-//         double normturn = static_cast<double> (processes[i].turnAroundTime)/processes[i].serviceTime;
-//         processes[i].normTurn = normturn;
-//     }
-  
-
-
-// }
-
 void SPN::schedule(std::vector<Process>& processes, int last_instant) {
     if (processes.empty()) {
         std::cerr << "Error: No processes to schedule!" << std::endl;
