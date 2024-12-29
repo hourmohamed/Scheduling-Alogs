@@ -15,119 +15,153 @@
 #include "FB_1.h"
 #include "Aging.h"
 
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <string>
 using namespace std;
-
-vector<int> parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &processes, std::string &visualizationType, int &lastInstant, std::string &selected_algo)
+void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &processes, std::string &visualizationType, int &lastInstant, std::string &selected_algo)
 {
     std::string line;
     std::vector<Scheduler *> localSchedulers;
-    std::vector<int> policies;
+
     std::getline(std::cin, line);
     visualizationType = line;
 
     std::getline(std::cin, line);
     std::stringstream ss(line);
     std::string policy;
-    int i = 0;
-
+ int i = 0;
     while (std::getline(ss, policy, ','))
-    {
+    {    
+       
         std::string policyName;
         int policyType;
-        int quantum = -1; // Default value for quantum
+        int quantum = -1;
 
         std::stringstream policyStream(policy);
         if (policy.find("-") != std::string::npos)
         {
             std::getline(policyStream, policyName, '-');
-            policyStream >> quantum; // Extract the quantum value
+            policyStream >> quantum;
         }
         else
         {
             policyName = policy;
         }
 
-        policyType = std::stoi(policyName); // Convert to integer for the policy type
-        policies.push_back(policyType);
+        policyType = std::stoi(policyName);
 
-        // Switch on policyType to add the correct scheduler
         switch (policyType)
         {
-        case 1: // FCFS
+        case 1:
             localSchedulers.push_back(new FCFS());
+            // std::cerr << "fcfs picked" << std::endl;
+
             selected_algo = "FCFS";
+            i++;
             break;
-        case 2: // RoundRobin
-            localSchedulers.push_back(new RoundRobin());
+        case 2:
             if (quantum != -1)
+            {
+
+                // cout <<quantum;
+                // Scheduler rr=new RoundRobin();
+                // std::cerr << "rr" << std::endl;
+                // std:cerr << i << std::endl;
+                localSchedulers.push_back(new RoundRobin());
                 localSchedulers[i]->quantum = quantum;
-            selected_algo = "RR";
+                selected_algo = "RR";
+            }
+            i++;
+            std::cerr << i << std::endl;
             break;
-        case 3: // SPN
+
+        case 3:
+            // SPN
             localSchedulers.push_back(new SPN());
             selected_algo = "SPN";
+            i++;
             break;
-        case 4: // SRT
+        case 4:
+            // SRT
             localSchedulers.push_back(new SRT());
             selected_algo = "SRT";
+            i++;
             break;
-        case 5: // HRRN
+        case 5:
+            // HRRN
             localSchedulers.push_back(new HRRN());
             selected_algo = "HRRN";
+            i++;
             break;
-        case 6: // FB-1
+        case 6:
+            // FB-1
             localSchedulers.push_back(new FB_1());
+            //localSchedulers[0]->quantum = quantum;
             selected_algo = "FB-1";
+            i++;
             break;
-        case 7: // FB-2i
+        case 7:
+            // FB-2i
             localSchedulers.push_back(new FB2i());
             selected_algo = "FB-2i";
+            i++;
             break;
-        case 8: // Aging
-            localSchedulers.push_back(new Aging());
+        case 8:
             if (quantum != -1)
+            {
+                
+                localSchedulers.push_back(new Aging());
                 localSchedulers[i]->quantum = quantum;
-            selected_algo = "Aging";
+                selected_algo = "Aging";
+            }
+            i++;
             break;
+
         default:
             std::cerr << "Error: Unknown policy " << policyType << std::endl;
-            break;
+            return;
         }
 
-        i++; // Move to the next scheduler
+        
     }
 
     schedulers = localSchedulers;
 
     std::getline(std::cin, line);
     lastInstant = std::stoi(line);
+   // std::cerr << "last instant: " << lastInstant << std::endl;
 
+std::getline(std::cin, line);
+int numProcesses = std::stoi(line);
+schedulers[0]->time_line = lastInstant;
+
+//std::cerr << "Number of processes: " << numProcesses << std::endl;
+
+processes.clear();
+for (int i = 0; i < numProcesses; ++i)
+{
     std::getline(std::cin, line);
-    int numProcesses = std::stoi(line);
-    schedulers[0]->time_line = lastInstant;
+    std::stringstream processStream(line);
+    char name;
+    int arrivalTime, serviceTime;
 
-    processes.clear();
-    for (int i = 0; i < numProcesses; ++i)
-    {
-        std::getline(std::cin, line);
-        std::stringstream processStream(line);
-        char name;
-        int arrivalTime, serviceTime;
+    processStream >> name;
+    processStream.ignore(1);  // Ignore the space
+    processStream >> arrivalTime;
+    processStream.ignore(1);  // Ignore the space
+    processStream >> serviceTime;
 
-        processStream >> name;
-        processStream.ignore(1); // Ignore the space
-        processStream >> arrivalTime;
-        processStream.ignore(1); // Ignore the space
-        processStream >> serviceTime;
+   
+    processes.push_back(Process(name, arrivalTime, serviceTime, lastInstant));
+}
 
-        processes.push_back(Process(name, arrivalTime, serviceTime, lastInstant));
-    }
-
-    return policies;
 }
 
 int get_index(const std::string &algo_name)
 {
+
     for (int i = 0; i < 8; ++i)
     {
         if (algo_name == algos[i])
@@ -145,48 +179,26 @@ int main()
     std::string visualizationType;
     int lastInstant;
     std::string selected_algo;
-    vector<int> policies;
 
-    // Parse input to initialize schedulers and processes
-    policies = parseInput(schedulers, processes, visualizationType, lastInstant, selected_algo);
+    parseInput(schedulers, processes, visualizationType, lastInstant, selected_algo);
 
-    // Create deep copies of processes for each scheduler
-    vector<vector<Process>> copy_processes(schedulers.size());
-    for (size_t i = 0; i < schedulers.size(); ++i)
+    int algo_index = get_index(selected_algo);
+
+    for (auto &scheduler : schedulers)
     {
-        // Clear the target vector to ensure it’s empty
-        copy_processes[i].clear();
-
-        // Perform a deep copy of the processes for this scheduler
-        copy_processes[i] = processes; // This performs a deep copy of the vector
-    }
-
-    // Loop over schedulers and assign a unique algo_index for each one based on policies
-    for (size_t i = 0; i < schedulers.size(); ++i)
-    {
-        int algo_index = policies[i-1];  // Corrected to use policies[i] instead of policies[i-1]
-
-        // Check the visualization type and call the appropriate function
+        // cout <<scheduler->quantum;
         if (visualizationType == "trace")
         {
-            // Schedule the processes and print the trace for the scheduler
-            schedulers[i]->schedule(copy_processes[i], lastInstant);
-            //cerr<<copy_processes[i][0].finishTime<<copy_processes[i+1][0].finishTime;
-            schedulers[i]->printTrace(algo_index, copy_processes[i]);
+            scheduler->schedule(processes, lastInstant);
+            scheduler->printTrace(algo_index, processes);
         }
         else if (visualizationType == "stats")
         {
-            // Schedule the processes and print the stats for the scheduler
-            schedulers[i]->schedule(copy_processes[i], lastInstant);
-            schedulers[i]->stats(algo_index, copy_processes[i]);
+            // cout <<processes[4].turnAroundTime << std::endl; 
+            scheduler->schedule(processes, lastInstant);
+            scheduler->stats(algo_index, processes);
         }
-        else
-        {
-            std::cerr << "Error: Unknown visualization type " << visualizationType << std::endl;
-        }
-
-        // Cleanup: Delete the scheduler after use
-        delete schedulers[i];
+        delete scheduler;
     }
 
     return 0;
