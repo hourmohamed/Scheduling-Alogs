@@ -19,7 +19,6 @@ std::vector<int> FB2i::calculate_finish_times(std::vector<Process>& processes){
 void FB2i::schedule(std::vector<Process>& processes, int last_instant) {
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     unordered_map<int, int> remaining_service_time;
-    // int last_instant = 
     int j = 0;
 
 
@@ -101,7 +100,7 @@ void FB2i::schedule(std::vector<Process>& processes, int last_instant) {
     for(int i = 0 ;i <processes.size();i++)
         {
             int k = processes[i].finishTime;
-            for(int j = k ; j<last_instant ; j ++)
+            for(int j = k ; j<=last_instant ; j ++)
             {
                 processes[i].state[j] = -1;
             }
