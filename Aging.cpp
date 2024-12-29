@@ -28,11 +28,13 @@ void Aging::schedule(std::vector<Process> &processes, int last_instant)
     int quantum = this->quantum;
 
     // Comparator for the priority queue
-    auto cmp = [](const Process *a, const Process *b) {
+    auto cmp = [](const Process *a, const Process *b)
+    {
         return a->priority < b->priority;
     };
-
-    std::priority_queue<Process *, std::vector<Process *>, decltype(cmp)> ready_queue(cmp);
+    queue<Process *> ready_queue;
+    queue<Process *> temp_queue;
+    // std::priority_queue<Process *, std::vector<Process *>, decltype(cmp)> ready_queue(cmp);
 
     // Sort processes by arrival time
     sort_by_arrival(processes);
@@ -40,65 +42,85 @@ void Aging::schedule(std::vector<Process> &processes, int last_instant)
     // Main scheduling loop
     while (number_of_processes < processes.size() || !ready_queue.empty())
     {
-        // Add arrived processes to the ready queue
+
         while (number_of_processes < processes.size() && processes[number_of_processes].arrivalTime <= current_time)
         {
             ready_queue.push(&processes[number_of_processes]);
-            processes[number_of_processes].priority = processes[number_of_processes].serviceTime; // Assign initial priority (based on service time)
+            processes[number_of_processes].priority = processes[number_of_processes].serviceTime;
             number_of_processes++;
         }
 
-        // If no processes are ready, advance time
         if (ready_queue.empty())
         {
-            current_time+=quantum;
+            current_time += quantum;
             continue;
         }
-
-        // Execute the highest-priority process
-        Process *current_process = ready_queue.top();
+        Process *current_process;
+        Process *max_process;
+        current_process = ready_queue.front();
         ready_queue.pop();
+        temp_queue.push(current_process);
+        // cout<<current_process->name<<current_process->priority<<" ";
+        int max_priority = current_process->priority;
+        while (!ready_queue.empty())
+        {
+            current_process = ready_queue.front();
+            ready_queue.pop();
 
-        int execution_time = min(current_process->remainingTime, quantum); // Execute the process for up to the quantum time
-        current_process->remainingTime -= execution_time;
+            if (current_process->priority > max_priority)
+            {
+                max_priority = current_process->priority;
+                // max_process=current_process;
+            }
+            temp_queue.push(current_process);
+        }
+        bool first_process = false;
+        while (!temp_queue.empty())
+        {
+            current_process = temp_queue.front();
+            temp_queue.pop();
+            if (current_process->priority == max_priority)
+            {
+                if (!first_process)
+                {
+                    max_process = current_process;
+                    first_process = true;
+                    continue;
+                }
+                
+            }
+            ready_queue.push(current_process);
+        }
 
-        // Update state for each unit of execution time
+        int execution_time = quantum;
+        // max_process->remainingTime -= execution_time;
+        cout << max_process->name << max_process->priority << " ";
+        cout << endl;
+
         for (int t = 0; t < execution_time; t++)
         {
             if (current_time < this->time_line)
-                current_process->state[current_time] = 1; // Mark this time slot as running (1 for running)
+                max_process->state[current_time] = 1;
             current_time++;
         }
 
-        // If the process is completed, set its finish time
-        if (current_process->remainingTime == 0)
-        {
-            current_process->finishTime = current_time;
-        }
-        else
-        {
-            ready_queue.push(current_process); // Re-add to the queue if not finished
-        }
-
-        // Increment the priority of all other ready processes (Aging)
         std::vector<Process *> temp_queue;
         while (!ready_queue.empty())
         {
-            Process *temp_process = ready_queue.top();
+            Process *temp_process = ready_queue.front();
             ready_queue.pop();
-            temp_process->priority++; // Aging: increase priority
+            temp_process->priority++;
             temp_queue.push_back(temp_process);
         }
 
-        // Re-add aged processes back to the ready queue
         for (Process *temp_process : temp_queue)
         {
             ready_queue.push(temp_process);
         }
-
-        // Check if the scheduling exceeds the timeline
+        ready_queue.push(max_process);
+        // cout<<max_process->name<<max_process->priority<<endl;
         if (current_time >= this->time_line)
             break;
+        cout << ready_queue.size() << endl;
     }
-
 }
