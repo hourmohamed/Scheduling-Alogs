@@ -13,7 +13,7 @@ std::vector<int> HRRN::calculate_finish_times(std::vector<Process>& processes) {
 }
 
 void HRRN::schedule(std::vector<Process>& processes, int last_instant) {
-    std::cerr << "in schedule" << std::endl;
+   // std::cerr << "in schedule" << std::endl;
 
     int current_time = 0;
     int completed_count = 0;
@@ -68,7 +68,7 @@ void HRRN::schedule(std::vector<Process>& processes, int last_instant) {
             completed_count++;
         } else {
             
-            std::cout << "No process ready; incrementing time to " << (current_time + 1) << std::endl;
+           // std::cout << "No process ready; incrementing time to " << (current_time + 1) << std::endl;
             current_time++;
         }
     }

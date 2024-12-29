@@ -153,7 +153,7 @@ void Scheduler::print_turnaround(std::vector<Process> &processes, std::vector<in
     }
 
     double mean_turnaround = total_turnaround / num_processes;
-    if (mean_turnaround <= 10)
+    if (mean_turnaround < 10)
         std::cout << "| " << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
     else
         std::cout << "|" << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
