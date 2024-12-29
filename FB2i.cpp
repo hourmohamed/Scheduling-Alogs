@@ -107,6 +107,17 @@ void FB2i::schedule(std::vector<Process>& processes, int last_instant) {
 
    
     for (int time = 0; time < last_instant; time++) {
+
+        for(int i=0; i<processes.size(); i++)
+        {
+            for(int j=0; j<last_instant; j++)
+            if (processes[i].state[j] != 1) {
+                if(processes[i].arrivalTime < j){
+                    processes[i].state[j] = 0; 
+                }
+            }
+        }
+        
         if (!pq.empty()) {
             int priority_level = pq.top().first;
             int process_index = pq.top().second;
@@ -137,6 +148,10 @@ void FB2i::schedule(std::vector<Process>& processes, int last_instant) {
                 processes[process_index].finishTime = temp;
                 processes[process_index].turnAroundTime = processes[process_index].finishTime - arrival_time;
                 processes[process_index].normTurn = (processes[process_index].turnAroundTime * 1.0) / service_time;
+
+                
+
+
             } else { 
                 if (pq.size() >= 1) {
                     pq.push(make_pair(priority_level + 1, process_index));
@@ -150,6 +165,7 @@ void FB2i::schedule(std::vector<Process>& processes, int last_instant) {
         // std::cerr << "before last while" << std::endl;
         
  
+        
         while (j < processes.size() && processes[j].arrivalTime <= time + 1) {
             std::cerr << "in last while" << std::endl;
             processes[j].state[time] = 0; 
@@ -158,5 +174,13 @@ void FB2i::schedule(std::vector<Process>& processes, int last_instant) {
             j++;
         }
     }
+    for(int i = 0 ;i <processes.size();i++)
+        {
+            int k = processes[i].finishTime;
+            for(int j = k ; j<last_instant ; j ++)
+            {
+                processes[i].state[j] = -1;
+            }
+        }
 
 }
