@@ -1,14 +1,15 @@
 #include "Aging.h"
-#include <iostream>
 #include <algorithm>
 #include <queue>
-#include <climits>
+#include <vector>
+
 using namespace std;
 
 void Aging::sort_by_arrival(std::vector<Process> &processes) {
-    std::sort(processes.begin(), processes.end(), [](const Process &a, const Process &b) {
-        return a.arrivalTime < b.arrivalTime;
-    });
+    std::sort(processes.begin(), processes.end(), 
+        [](const Process &a, const Process &b) {
+            return a.arrivalTime < b.arrivalTime;
+        });
 }
 
 std::vector<int> Aging::calculate_finish_times(std::vector<Process> &processes) {
@@ -23,46 +24,55 @@ void Aging::schedule(std::vector<Process> &processes, int last_instant) {
     int current_time = 0;
     int quantum = this->quantum;
     queue<Process*> ready_queue;
-    int number=0;
-    // Store initial priorities
+    
+    // Store initial priorities and waiting times
     vector<int> initial_priorities;
+    vector<int> wait_times(processes.size(), 0);
+    
     for (const auto &process : processes) {
         initial_priorities.push_back(process.priority);
     }
-
+    
     while (current_time < this->time_line) {
         // Check for newly arrived processes
-        while (number < processes.size() && processes[number].arrivalTime <= current_time)
-        {
-            for (int j = processes[number].arrivalTime; j < current_time; ++j)
-                processes[number].state.at(j) = 0;
-            processes[number].state.at(current_time) = 0;
-            ready_queue.push(&processes[number]);
-            number++;
+        for (size_t i = 0; i < processes.size(); i++) {
+            if (processes[i].arrivalTime == current_time) {
+                ready_queue.push(&processes[i]);
+                processes[i].priority = initial_priorities[i];
+            }
         }
-
-        // Mark all processes in ready queue with state 0
         
+        if (ready_queue.empty()) {
+            current_time++;
+            continue;
+        }
+        
+        // Update waiting times and priorities for all processes in ready queue
         queue<Process*> temp_ready = ready_queue;
         while (!temp_ready.empty()) {
             Process* p = temp_ready.front();
+            size_t idx = p - &processes[0];
             p->state[current_time] = 0;  // Set state to 0 for waiting processes
+            wait_times[idx]++;
+            // Increase priority based on waiting time
+            p->priority = initial_priorities[idx] + wait_times[idx];
             temp_ready.pop();
         }
-
-        if (ready_queue.empty()) {
-            current_time+quantum;
-            continue;
-        }
-
+        
         // Find process with highest priority
         Process* highest_priority_process = nullptr;
         int max_priority = -1;
         queue<Process*> temp_queue;
-
+        
+        // Create a copy of ready_queue for priority comparison
+        queue<Process*> priority_queue = ready_queue;
         while (!ready_queue.empty()) {
-            Process* current = ready_queue.front();
             ready_queue.pop();
+        }
+        
+        while (!priority_queue.empty()) {
+            Process* current = priority_queue.front();
+            priority_queue.pop();
             
             if (current->priority > max_priority) {
                 if (highest_priority_process) {
@@ -74,9 +84,11 @@ void Aging::schedule(std::vector<Process> &processes, int last_instant) {
                 temp_queue.push(current);
             }
         }
-
+        
         // Execute highest priority process
-        if (highest_priority_process && current_time < this->time_line) {
+        if (highest_priority_process) {
+            size_t process_index = highest_priority_process - &processes[0];
+            
             // Execute for quantum time units
             for (int i = 0; i < quantum && current_time < this->time_line; i++) {
                 highest_priority_process->state[current_time] = 1;
@@ -90,25 +102,19 @@ void Aging::schedule(std::vector<Process> &processes, int last_instant) {
                 }
                 
                 current_time++;
+                if (current_time >= this->time_line) break;
             }
-
-            size_t process_index = highest_priority_process - &processes[0];
+            
+            // Reset wait time for executed process
+            wait_times[process_index] = 0;
             highest_priority_process->priority = initial_priorities[process_index];
-
+            
+            // Add processes back to ready queue
             while (!temp_queue.empty()) {
                 Process* waiting = temp_queue.front();
                 temp_queue.pop();
-                waiting->priority++;
                 ready_queue.push(waiting);
             }
-           while (number < processes.size() && processes[number].arrivalTime <= current_time)
-        {
-            for (int j = processes[number].arrivalTime; j < current_time; ++j)
-                processes[number].state.at(j) = 0;
-            processes[number].state.at(current_time) = 0;
-            ready_queue.push(&processes[number]);
-            number++;
-        }
             ready_queue.push(highest_priority_process);
         }
     }
