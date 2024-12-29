@@ -209,7 +209,7 @@ void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
     cout <<"------------------------------------------------"<<endl;
     for (int i = 0; i < processes.size(); i++)
     {
-        cout <<processes[i].name <<"    ";
+        cout <<processes[i].name <<"     ";
         for (int j=0;j<this->time_line;j++)
             {
                 cout <<"|";
@@ -222,7 +222,7 @@ void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
             }
         cout <<"|"<<endl;
     }
-    cout <<"------------------------------------------------"<<endl;
+    cout <<"------------------------------------------------"<<endl<<endl;
 }
 
 void Scheduler::sort_by_arrival(std::vector<Process> &processes)
