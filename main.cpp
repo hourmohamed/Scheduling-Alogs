@@ -180,7 +180,7 @@ int main()
         }
         else if (visualizationType == "stats")
         {
-            cout <<processes[4].turnAroundTime << std::endl; 
+            // cout <<processes[4].turnAroundTime << std::endl; 
             scheduler->schedule(processes, lastInstant);
             scheduler->stats(algo_index, processes);
         }
