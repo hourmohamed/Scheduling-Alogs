@@ -124,6 +124,8 @@ void RoundRobin::schedule(std::vector<Process> &processes)
 
         while (number_of_processes < processes.size() && processes[number_of_processes].arrivalTime <= current_time)
         {
+            for (int j = processes[number_of_processes].arrivalTime; j < current_time; ++j)
+                processes[number_of_processes].state.at(j) = 0;
             processes[number_of_processes].state.at(current_time) = 0;
             ready_queue.push(&processes[number_of_processes]);
             number_of_processes++;
@@ -166,7 +168,9 @@ void RoundRobin::schedule(std::vector<Process> &processes)
             // Recheck new processes that arrive at the current time
             while (number_of_processes < processes.size() && processes[number_of_processes].arrivalTime <= current_time)
             {
-                processes[number_of_processes].state.at(current_time) = 0;
+               // cout << processes[number_of_processes].name << processes[number_of_processes].arrivalTime << current_time << time_slice << endl;
+                for (int j = processes[number_of_processes].arrivalTime; j < current_time; ++j)
+                    processes[number_of_processes].state.at(j) = 0;
                 ready_queue.push(&processes[number_of_processes]);
                 number_of_processes++;
             }
@@ -174,12 +178,4 @@ void RoundRobin::schedule(std::vector<Process> &processes)
             ready_queue.push(current_process); // Re-add current process to the queue
         }
     }
-    for (int n = 0; n < processes.size(); n++)
-        for (int i = 0; i < time_line; i++)
-            if (processes[n].arrivalTime <= i && processes[n].finishTime < i)
-            {
-                if (processes[n].finishTime == i)
-                    break;
-                processes[n].state[i] = 0;
-            }
 }

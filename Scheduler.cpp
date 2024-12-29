@@ -226,7 +226,7 @@ void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
             }
         cout <<"| "<<endl;
     }
-    cout <<"------------------------------------------------"<<endl;
+    cout <<"------------------------------------------------"<<endl<<endl;
 }
 
 void Scheduler::sort_by_arrival(std::vector<Process> &processes)
