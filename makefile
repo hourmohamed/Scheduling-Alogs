@@ -1,10 +1,10 @@
-all: main
+all: lab6
 
-main: main.o Process.o Scheduler.o FCFS.o RoundRobin.o SPN.o  SRT.o HRRN.o FB2i.o Aging.o
-	g++ main.o Process.o Scheduler.o FCFS.o RoundRobin.o SPN.o  SRT.o HRRN.o FB2i.o Aging.o -o main 
+lab6: lab6.o Process.o Scheduler.o FCFS.o RoundRobin.o SPN.o  SRT.o HRRN.o  Aging.o FB_1.o
+	g++ lab6.o Process.o Scheduler.o FCFS.o RoundRobin.o SPN.o  SRT.o HRRN.o  Aging.o FB_1.o -o  lab6
 
-main.o: main.cpp
-	g++ -c main.cpp -o main.o
+lab6.o: main.cpp
+	g++ -c main.cpp -o lab6.o
 
 Process.o: Process.cpp
 	g++ -c Process.cpp -o Process.o
@@ -25,11 +25,13 @@ SRT.o: SRT.cpp
 HRRN.o: HRRN.cpp
 	g++ -c HRRN.cpp -o HRRN.o	
 
-FB-2i.o: FB2i.cpp
-	g++ -c FB-2i.cpp -o FB-2i.o
+FB_1.o: FB_1.cpp
+	g++ -c FB_1.cpp -o FB_1.o	
+# FB-2i.o: FB2i.cpp
+# 	g++ -c FB-2i.cpp -o FB-2i.o
 
 Aging.o: Aging.cpp
 	g++ -c Aging.cpp -o Aging.o
 
 clean:
-	rm -f *.o main
+	rm -f *.o lab6

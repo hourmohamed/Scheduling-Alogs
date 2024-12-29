@@ -152,7 +152,7 @@ void Scheduler::print_turnaround(std::vector<Process> &processes, std::vector<in
     }
 
     double mean_turnaround = total_turnaround / num_processes;
-    if (mean_turnaround <= 10)
+    if (mean_turnaround <10)
         std::cout << "| " << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
     else
         std::cout << "|" << std::fixed << std::setprecision(2) << mean_turnaround << "|\n";
@@ -189,26 +189,31 @@ void Scheduler::stats(int algo_index, std::vector<Process> processes)
 
 void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
 {
+   // cout <<algo_index<<endl;
     std::cout << algos[algo_index];
-    if (this->quantum != 0&&algo_index==8)
+    
+    if (this->quantum != 0&&algo_index!=7)
         cout << "-" << this->quantum;
     int i=this->time_line/10;
     int j=this->time_line%10;
-    cout <<" ";
+    if (quantum&&algo_index!=7)
+        cout <<setw(5-algos[algo_index].length());
+    else
+        cout <<setw(7-algos[algo_index].length());
     while (i--)
     {
         for (int k=0;k<10;k++)
-            cout <<" "<<k;
+            cout <<k<<" ";
         
     }
     for (int k=0;k<j;k++)
-        cout<<" "<<k ;
+        cout<<k<<" " ;
     
-    cout << " 0"<<endl;
+    cout << "0 "<<endl;
     cout <<"------------------------------------------------"<<endl;
     for (int i = 0; i < processes.size(); i++)
     {
-        cout <<processes[i].name <<"    ";
+        cout <<processes[i].name <<"     ";
         for (int j=0;j<this->time_line;j++)
             {
                 cout <<"|";
@@ -219,7 +224,7 @@ void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
                 else 
                     cout <<" ";
             }
-        cout <<"|"<<endl;
+        cout <<"| "<<endl;
     }
     cout <<"------------------------------------------------"<<endl;
 }

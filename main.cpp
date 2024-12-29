@@ -11,7 +11,8 @@
 #include "SPN.h"
 #include "SRT.h"
 #include "HRRN.h"
-#include "FB2i.h"
+// #include "FB2i.h"
+#include "FB_1.h"
 #include "Aging.h"
 #include <iostream>
 #include <vector>
@@ -86,12 +87,14 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 6:
             // FB-1
+            localSchedulers.push_back(new FB_1());
+            //localSchedulers[0]->quantum = quantum;
             selected_algo = "FB-1";
             break;
         case 7:
             // FB-2i
-            localSchedulers.push_back(new FB2i());
-            selected_algo = "FB-2i";
+            //localSchedulers.push_back(new FB2i());
+            //selected_algo = "FB-2i";
             break;
         case 8:
             if (quantum != -1)
