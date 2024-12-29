@@ -6,22 +6,13 @@
 
 class FB2i :public Scheduler
 {
-
 public:
-    FB2i();
-    ~FB2i();
-    void schedule(std::vector<Process>& processes) override;
+    void schedule(std::vector<Process>& processes, int last_instant) override;
     std::vector<int> calculate_finish_times(std::vector<Process>& processes) override;
     
 };
 
-FB2i::FB2i()
-{
-}
 
-FB2i::~FB2i()
-{
-}
 
 
 #endif

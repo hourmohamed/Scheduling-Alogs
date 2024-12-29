@@ -11,7 +11,7 @@ public:
     // SPN();
     // ~SPN();
 
-    void schedule(std::vector<Process>& processes) override ;
+    void schedule(std::vector<Process>& processes, int last_instant) override ;
     std::vector<int> calculate_finish_times(std::vector<Process>& processes) override ;
     
     

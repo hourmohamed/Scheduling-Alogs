@@ -90,7 +90,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 7:
             // FB-2i
-            localSchedulers.push_back(new FB2i());
+            // localSchedulers.push_back(new FB2i());
             selected_algo = "FB-2i";
             break;
         case 8:
@@ -166,18 +166,20 @@ int main()
 
     int algo_index = get_index(selected_algo);
 
+
     for (auto &scheduler : schedulers)
     {
         // cout <<scheduler->quantum;
         if (visualizationType == "trace")
         {
-            scheduler->schedule(processes);
+            scheduler->schedule(processes, lastInstant);
             scheduler->printTrace(algo_index, processes);
         }
         else if (visualizationType == "stats")
         {
+            std::cerr << lastInstant << std::endl;
             cout <<processes[4].turnAroundTime << std::endl; 
-            scheduler->schedule(processes);
+            scheduler->schedule(processes, lastInstant);
             scheduler->stats(algo_index, processes);
         }
         delete scheduler;

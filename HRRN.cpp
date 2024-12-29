@@ -12,7 +12,7 @@ std::vector<int> HRRN::calculate_finish_times(std::vector<Process>& processes) {
     return finish_times;
 }
 
-void HRRN::schedule(std::vector<Process>& processes) {
+void HRRN::schedule(std::vector<Process>& processes, int last_instant) {
     std::cerr << "in schedule" << std::endl;
 
     int current_time = 0;

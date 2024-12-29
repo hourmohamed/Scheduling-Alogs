@@ -53,7 +53,7 @@ std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
 //     }
 // }
 
-void FCFS::schedule(std::vector<Process>& processes) {
+void FCFS::schedule(std::vector<Process>& processes, int last_instant) {
     if (processes.empty()) {
         std::cerr << "Error: No processes to schedule!" << std::endl;
         return;
@@ -82,10 +82,10 @@ void FCFS::schedule(std::vector<Process>& processes) {
         // std::cerr << "in loop 2" << std::endl;
          
         for (int t = p.arrivalTime; t < current_time; ++t) {
-            std::cerr << "in loop 3" << std::endl;
+            // std::cerr << "in loop 3" << std::endl;
             int wrapped_time = t % this->time_line;
             p.state[wrapped_time] = 0;  // Waiting (dot)
-            std::cerr << p.name << std::endl;
+            // std::cerr << p.name << std::endl;
             // std::cerr << wrapped_time << std::endl;
             // std::cerr << current_time << std::endl;
         }

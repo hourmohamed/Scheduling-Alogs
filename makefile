@@ -25,8 +25,8 @@ SRT.o: SRT.cpp
 HRRN.o: HRRN.cpp
 	g++ -c HRRN.cpp -o HRRN.o	
 
-FB-2i.o: FB2i.cpp
-	g++ -c FB-2i.cpp -o FB-2i.o
+FB2i.o: FB2i.cpp
+	g++ -c FB2i.cpp -o FB2i.o
 
 Aging.o: Aging.cpp
 	g++ -c Aging.cpp -o Aging.o

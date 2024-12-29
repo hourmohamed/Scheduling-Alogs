@@ -24,7 +24,7 @@ std::vector<int> SRT::calculate_finish_times(std::vector<Process> &processes)
 }
 
 
-void SRT::schedule(std::vector<Process> &processes)
+void SRT::schedule(std::vector<Process> &processes, int last_instant)
 {
     int current_time = 0;
     int number_of_processes = 0;

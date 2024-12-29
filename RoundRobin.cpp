@@ -51,7 +51,7 @@ std::vector<int> RoundRobin::calculate_finish_times(std::vector<Process> &proces
     return finish_times;
 }
 
-void RoundRobin::schedule(std::vector<Process> &processes)
+void RoundRobin::schedule(std::vector<Process> &processes, int last_instant)
 {
     int current_time = 0; 
     int number_of_processes = 0;       

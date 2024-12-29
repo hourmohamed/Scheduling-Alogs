@@ -21,7 +21,7 @@ std::vector<int> Aging::calculate_finish_times(std::vector<Process> &processes)
     return finish_times;
 }
 
-void Aging::schedule(std::vector<Process> &processes)
+void Aging::schedule(std::vector<Process> &processes, int last_instant)
 {
     int current_time = 0;
     int number_of_processes = 0;
