@@ -11,7 +11,7 @@
 #include "SPN.h"
 #include "SRT.h"
 #include "HRRN.h"
-
+#include "Aging.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -95,7 +95,10 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
         case 8:
             if (quantum != -1)
             {
-                selected_algo = "AGING";
+                
+                localSchedulers.push_back(new Aging());
+                localSchedulers[0]->quantum = quantum;
+                selected_algo = "Aging";
             }
             break;
 

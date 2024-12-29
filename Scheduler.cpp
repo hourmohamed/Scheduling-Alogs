@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const std::string algos[8] = {"FCFS", "RR", "SPN", "SRT", "HRRN", "FB-1", "FB-2i", "AGING"};
+const std::string algos[8] = {"FCFS", "RR", "SPN", "SRT", "HRRN", "FB-1", "FB-2i", "Aging"};
 
 std::vector<double> Scheduler::calculate_normturn(std::vector<Process> &processes)
 {
@@ -190,7 +190,7 @@ void Scheduler::stats(int algo_index, std::vector<Process> processes)
 void Scheduler::printTrace(int algo_index,const std::vector<Process> &processes)
 {
     std::cout << algos[algo_index];
-    if (this->quantum != 0)
+    if (this->quantum != 0&&algo_index==8)
         cout << "-" << this->quantum;
     int i=this->time_line/10;
     int j=this->time_line%10;
