@@ -20,6 +20,7 @@
 #include <sstream>
 #include <string>
 using namespace std;
+
 void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &processes, std::string &visualizationType, int &lastInstant, std::string &selected_algo)
 {
     std::string line;
@@ -31,10 +32,9 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
     std::getline(std::cin, line);
     std::stringstream ss(line);
     std::string policy;
- int i = 0;
+    int i = 0;
     while (std::getline(ss, policy, ','))
     {    
-       
         std::string policyName;
         int policyType;
         int quantum = -1;
@@ -51,112 +51,84 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
         }
 
         policyType = std::stoi(policyName);
-
+        
         switch (policyType)
         {
         case 1:
             localSchedulers.push_back(new FCFS());
-            // std::cerr << "fcfs picked" << std::endl;
-
             selected_algo = "FCFS";
-            i++;
             break;
         case 2:
-            if (quantum != -1)
             {
-
-                // cout <<quantum;
-                // Scheduler rr=new RoundRobin();
-                // std::cerr << "rr" << std::endl;
-                // std:cerr << i << std::endl;
-                localSchedulers.push_back(new RoundRobin());
-                localSchedulers[i]->quantum = quantum;
+                RoundRobin* rr = new RoundRobin();
+                if (quantum != -1) {
+                    rr->quantum = quantum;
+                }
+                localSchedulers.push_back(rr);
                 selected_algo = "RR";
             }
-            i++;
-            std::cerr << i << std::endl;
             break;
-
         case 3:
-            // SPN
             localSchedulers.push_back(new SPN());
             selected_algo = "SPN";
-            i++;
             break;
         case 4:
-            // SRT
             localSchedulers.push_back(new SRT());
             selected_algo = "SRT";
-            i++;
             break;
         case 5:
-            // HRRN
             localSchedulers.push_back(new HRRN());
             selected_algo = "HRRN";
-            i++;
             break;
         case 6:
-            // FB-1
             localSchedulers.push_back(new FB_1());
-            //localSchedulers[0]->quantum = quantum;
             selected_algo = "FB-1";
-            i++;
             break;
         case 7:
-            // FB-2i
             localSchedulers.push_back(new FB2i());
             selected_algo = "FB-2i";
-            i++;
             break;
         case 8:
-            if (quantum != -1)
             {
-                
-                localSchedulers.push_back(new Aging());
-                localSchedulers[i]->quantum = quantum;
+                Aging* aging = new Aging();
+                if (quantum != -1) {
+                    aging->quantum = quantum;
+                }
+                localSchedulers.push_back(aging);
                 selected_algo = "Aging";
             }
-            i++;
             break;
-
         default:
             std::cerr << "Error: Unknown policy " << policyType << std::endl;
             return;
         }
-
-        
+        i++;
     }
 
     schedulers = localSchedulers;
 
     std::getline(std::cin, line);
     lastInstant = std::stoi(line);
-   // std::cerr << "last instant: " << lastInstant << std::endl;
 
-std::getline(std::cin, line);
-int numProcesses = std::stoi(line);
-schedulers[0]->time_line = lastInstant;
-
-//std::cerr << "Number of processes: " << numProcesses << std::endl;
-
-processes.clear();
-for (int i = 0; i < numProcesses; ++i)
-{
     std::getline(std::cin, line);
-    std::stringstream processStream(line);
-    char name;
-    int arrivalTime, serviceTime;
+    int numProcesses = std::stoi(line);
 
-    processStream >> name;
-    processStream.ignore(1);  // Ignore the space
-    processStream >> arrivalTime;
-    processStream.ignore(1);  // Ignore the space
-    processStream >> serviceTime;
+    processes.clear();
+    for (int i = 0; i < numProcesses; ++i)
+    {
+        std::getline(std::cin, line);
+        std::stringstream processStream(line);
+        char name;
+        int arrivalTime, serviceTime;
 
-   
-    processes.push_back(Process(name, arrivalTime, serviceTime, lastInstant));
-}
+        processStream >> name;
+        processStream.ignore(1);
+        processStream >> arrivalTime;
+        processStream.ignore(1);
+        processStream >> serviceTime;
 
+        processes.push_back(Process(name, arrivalTime, serviceTime, lastInstant));
+    }
 }
 
 int get_index(const std::string &algo_name)
@@ -182,22 +154,67 @@ int main()
 
     parseInput(schedulers, processes, visualizationType, lastInstant, selected_algo);
 
-    int algo_index = get_index(selected_algo);
-
-    for (auto &scheduler : schedulers)
+    if (visualizationType == "trace")
     {
-        // cout <<scheduler->quantum;
-        if (visualizationType == "trace")
+        for (auto &scheduler : schedulers)
         {
-            scheduler->schedule(processes, lastInstant);
-            scheduler->printTrace(algo_index, processes);
+            // Create a fresh copy of processes for each scheduler
+            std::vector<Process> processesCopy = processes;
+            
+            // Set timeline for the scheduler
+            scheduler->time_line = lastInstant;
+            
+            // Run the scheduler
+            scheduler->schedule(processesCopy, lastInstant);
+            
+            // Get the appropriate algorithm index for trace printing
+            int algo_index;
+            if (dynamic_cast<FCFS*>(scheduler)) algo_index = 0;
+            else if (dynamic_cast<RoundRobin*>(scheduler)) algo_index = 1;
+            else if (dynamic_cast<SPN*>(scheduler)) algo_index = 2;
+            else if (dynamic_cast<SRT*>(scheduler)) algo_index = 3;
+            else if (dynamic_cast<HRRN*>(scheduler)) algo_index = 4;
+            else if (dynamic_cast<FB_1*>(scheduler)) algo_index = 5;
+            else if (dynamic_cast<FB2i*>(scheduler)) algo_index = 6;
+            else if (dynamic_cast<Aging*>(scheduler)) algo_index = 7;
+            else algo_index = 0;
+
+            // Print trace using the scheduler's trace method
+            scheduler->printTrace(algo_index, processesCopy);
         }
-        else if (visualizationType == "stats")
+    }
+    else if (visualizationType == "stats")
+    {
+        for (auto &scheduler : schedulers)
         {
-            // cout <<processes[4].turnAroundTime << std::endl; 
-            scheduler->schedule(processes, lastInstant);
-            scheduler->stats(algo_index, processes);
+            // Create a fresh copy of processes for each scheduler
+            std::vector<Process> processesCopy = processes;
+            
+            // Set timeline for the scheduler
+            scheduler->time_line = lastInstant;
+            
+            // Run the scheduler
+            scheduler->schedule(processesCopy, lastInstant);
+            
+            // Get the appropriate algorithm index for stats
+            int algo_index;
+            if (dynamic_cast<FCFS*>(scheduler)) algo_index = 0;
+            else if (dynamic_cast<RoundRobin*>(scheduler)) algo_index = 1;
+            else if (dynamic_cast<SPN*>(scheduler)) algo_index = 2;
+            else if (dynamic_cast<SRT*>(scheduler)) algo_index = 3;
+            else if (dynamic_cast<HRRN*>(scheduler)) algo_index = 4;
+            else if (dynamic_cast<FB_1*>(scheduler)) algo_index = 5;
+            else if (dynamic_cast<FB2i*>(scheduler)) algo_index = 6;
+            else if (dynamic_cast<Aging*>(scheduler)) algo_index = 7;
+            else algo_index = 0;
+            
+            // Print stats using the scheduler's stats method
+            scheduler->stats(algo_index, processesCopy);
         }
+    }
+
+    // Cleanup
+    for (auto scheduler : schedulers) {
         delete scheduler;
     }
 
