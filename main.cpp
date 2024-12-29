@@ -31,9 +31,10 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
     std::getline(std::cin, line);
     std::stringstream ss(line);
     std::string policy;
-
+ int i = 0;
     while (std::getline(ss, policy, ','))
-    {
+    {    
+       
         std::string policyName;
         int policyType;
         int quantum = -1;
@@ -58,6 +59,7 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             // std::cerr << "fcfs picked" << std::endl;
 
             selected_algo = "FCFS";
+            i++;
             break;
         case 2:
             if (quantum != -1)
@@ -65,52 +67,64 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
 
                 // cout <<quantum;
                 // Scheduler rr=new RoundRobin();
+                // std::cerr << "rr" << std::endl;
+                // std:cerr << i << std::endl;
                 localSchedulers.push_back(new RoundRobin());
-                localSchedulers[0]->quantum = quantum;
+                localSchedulers[i]->quantum = quantum;
                 selected_algo = "RR";
             }
+            i++;
+            std::cerr << i << std::endl;
             break;
 
         case 3:
             // SPN
             localSchedulers.push_back(new SPN());
             selected_algo = "SPN";
+            i++;
             break;
         case 4:
             // SRT
             localSchedulers.push_back(new SRT());
             selected_algo = "SRT";
+            i++;
             break;
         case 5:
             // HRRN
             localSchedulers.push_back(new HRRN());
             selected_algo = "HRRN";
+            i++;
             break;
         case 6:
             // FB-1
             localSchedulers.push_back(new FB_1());
             //localSchedulers[0]->quantum = quantum;
             selected_algo = "FB-1";
+            i++;
             break;
         case 7:
             // FB-2i
             localSchedulers.push_back(new FB2i());
             selected_algo = "FB-2i";
+            i++;
             break;
         case 8:
             if (quantum != -1)
             {
                 
                 localSchedulers.push_back(new Aging());
-                localSchedulers[0]->quantum = quantum;
+                localSchedulers[i]->quantum = quantum;
                 selected_algo = "Aging";
             }
+            i++;
             break;
 
         default:
             std::cerr << "Error: Unknown policy " << policyType << std::endl;
             return;
         }
+
+        
     }
 
     schedulers = localSchedulers;
