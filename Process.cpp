@@ -12,6 +12,7 @@ Process::Process(char name, int arrivalTime, int serviceTime, int time_line) {
     this->normTurn = 0;
     this->feedback_queue=0;
     this->done=false;
+    this->priority=this->serviceTime;
     state.resize(time_line, -1);
 }
 
