@@ -28,7 +28,7 @@ bool is_empty_queues(queue<Process *> ready_queues[], int n)
     return true;
 }
 
-void FB_1::schedule(std::vector<Process> &processes)
+void FB_1::schedule(std::vector<Process> &processes, int last_instant)
 {
     int current_time = 0;
     int number_of_processes = 0;

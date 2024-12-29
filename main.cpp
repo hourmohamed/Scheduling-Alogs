@@ -11,9 +11,10 @@
 #include "SPN.h"
 #include "SRT.h"
 #include "HRRN.h"
-// #include "FB2i.h"
+#include "FB2i.h"
 #include "FB_1.h"
 #include "Aging.h"
+
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -93,8 +94,8 @@ void parseInput(std::vector<Scheduler *> &schedulers, std::vector<Process> &proc
             break;
         case 7:
             // FB-2i
-            //localSchedulers.push_back(new FB2i());
-            //selected_algo = "FB-2i";
+            localSchedulers.push_back(new FB2i());
+            selected_algo = "FB-2i";
             break;
         case 8:
             if (quantum != -1)
@@ -174,13 +175,13 @@ int main()
         // cout <<scheduler->quantum;
         if (visualizationType == "trace")
         {
-            scheduler->schedule(processes);
+            scheduler->schedule(processes, lastInstant);
             scheduler->printTrace(algo_index, processes);
         }
         else if (visualizationType == "stats")
         {
             cout <<processes[4].turnAroundTime << std::endl; 
-            scheduler->schedule(processes);
+            scheduler->schedule(processes, lastInstant);
             scheduler->stats(algo_index, processes);
         }
         delete scheduler;

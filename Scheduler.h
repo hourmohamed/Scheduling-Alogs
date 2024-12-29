@@ -17,7 +17,7 @@ public:
     const std::string STATS = "stats";
     int quantum=0;
     int time_line=0;
-    virtual void schedule(std::vector<Process>& processes) = 0;
+    virtual void schedule(std::vector<Process>& processes, int last_instant) = 0;
     virtual std::vector<int> calculate_finish_times(std::vector<Process>& processes) = 0;  // Pure virtual
 
     std::vector<double> calculate_normturn(std::vector<Process>& processes);

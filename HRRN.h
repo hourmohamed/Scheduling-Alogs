@@ -9,7 +9,7 @@ class HRRN : public Scheduler{
     // HRRN();
     // ~HRRN();
 
-    void schedule(std::vector<Process>& processes) override ;
+    void schedule(std::vector<Process>& processes, int last_instant) override ;
     std::vector<int> calculate_finish_times(std::vector<Process>& processes) override ;
     // int calculate_wait_time(Process p);
 

@@ -53,7 +53,7 @@ std::vector<int> FCFS::calculate_finish_times(std::vector<Process>& processes) {
 //     }
 // }
 
-void FCFS::schedule(std::vector<Process>& processes) {
+void FCFS::schedule(std::vector<Process>& processes, int last_instant) {
     if (processes.empty()) {
         std::cerr << "Error: No processes to schedule!" << std::endl;
         return;

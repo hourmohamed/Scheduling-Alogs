@@ -75,7 +75,7 @@ struct CompareServiceTime {
 
 // }
 
-void SPN::schedule(std::vector<Process>& processes) {
+void SPN::schedule(std::vector<Process>& processes, int last_instant) {
     if (processes.empty()) {
         std::cerr << "Error: No processes to schedule!" << std::endl;
         return;
